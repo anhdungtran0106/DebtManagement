@@ -10,7 +10,7 @@ void DebtManagement::printMenu()
 {
     cout << "\t\tDebt Management Program\n\n";
     cout << "\t1. Debts\n";
-    cout << "\t2. The loans\n";
+    cout << "\t2. Loans\n";
     cout << "\t3. List Of Creditors And Debtors\n";
     cout << "\t4. Quit\n\n";
     cout << "\t Select Function: ";
@@ -23,12 +23,79 @@ void DebtManagement::printMenu()
         debtManagement();
         break;
     
+    case 2:
+        loanManagement();
+        break;
+    
     case 4:
         exit(0);
     
     default:
         break;
     }
+}
+
+void DebtManagement::loanManagement()
+{
+    cout << "\t\tSelect Functions\n\n";
+    cout << "\t1. Show List Of Loans\n";
+    cout << "\t2. Add Loan\n";
+    cout << "\t3. Edit Loan\n";
+    cout << "\t4. Delete Loan\n";
+    cout << "\t5. Loan Payment\n";
+    cout << "\t6. Quit\n\n";
+    cout << "\t Select Function: ";
+
+    int selection;
+    cin >> selection;
+    switch (selection)
+    {
+    case 1:
+        showListOfLoans();
+        loanManagement();
+        break;
+
+    case 2:
+       addLoan();
+       saveFileLoan();
+       loanManagement();
+       break;
+
+    case 3:
+        showListOfLoans();
+        editFileLoan();
+        saveFileLoan();
+        loanManagement();
+        break;
+
+    case 4:
+        deleteLoan();
+        saveFileLoan();
+        loanManagement();
+        break;
+
+    case 5:
+        showListOfLoans();
+        payLoan();
+        saveFileLoan();
+        loanManagement();
+    
+    case 6:
+        printMenu();
+        break;
+
+    default:
+        break;
+    }
+}
+
+void DebtManagement::addLoan()
+{
+    Debt loan;
+
+    loan.insertInfomation();
+    loan_list[loan_amount] = loan;
+    loan_amount++;
 }
 
 void DebtManagement::debtManagement()
@@ -104,6 +171,16 @@ void DebtManagement::showListOfDebts()
     }
 }
 
+void DebtManagement::showListOfLoans()
+{
+    cout << "\t\tList Of Loans:\n\n";
+    for (int i = 0; i < loan_amount; i++)
+    {
+        cout << i + 1 << ". ";
+        loan_list[i].printLoan();
+    }
+}
+
 void DebtManagement::deleteDebt()
 {
     showListOfDebts();
@@ -125,6 +202,27 @@ void DebtManagement::deleteDebt()
     debt_amount--;
 }
 
+void DebtManagement::deleteLoan()
+{
+    showListOfLoans();
+    cout << "\tWhat loan do you want to write off: ";
+    int selection;
+    cin >> selection;
+    
+    while (selection > loan_amount || selection <= 0)
+    {
+        cout << "Invalid number, please re-enter: ";
+        cin >> selection;
+    }
+
+    selection--;
+    for (int i = selection; i < loan_amount; i++)
+    {
+        loan_list[i] = loan_list[i + 1];
+    }
+    loan_amount--;
+}
+
 void DebtManagement::saveFile()
 {
     fstream f;
@@ -140,6 +238,26 @@ void DebtManagement::saveFile()
         f << debt_list[i].getDate().getDay() << endl;
         f << debt_list[i].getDate().getYear() << endl;
         f << debt_list[i].getInterestRate() << endl;
+    }
+
+    f.close();
+}
+
+void DebtManagement::saveFileLoan()
+{
+    fstream f;
+    f.open("loan.txt", ios::out);
+
+    f << loan_amount << endl;
+    for (int i = 0; i < loan_amount; i++)
+    {
+        f << loan_list[i].getAmountOwed() << endl;
+        f << loan_list[i].getUser().getName() << endl;
+        f << loan_list[i].getUser().getPhoneNumber() << endl;
+        f << loan_list[i].getDate().getMonth() << endl;
+        f << loan_list[i].getDate().getDay() << endl;
+        f << loan_list[i].getDate().getYear() << endl;
+        f << loan_list[i].getInterestRate() << endl;
     }
 
     f.close();
@@ -224,6 +342,55 @@ void DebtManagement::editFile()
     debt_list[selection - 1] = debt;
 }
 
+void DebtManagement::editFileLoan()
+{
+    showListOfLoans();
+    cout << "\tWhat loan do you want to edit: ";
+    int selection;
+    cin >> selection;
+    while (selection > loan_amount || selection <= 0 || loan_list[selection - 1].getDebtPayment())
+    {
+        cout << "Invalid number, please re-enter: ";
+        cin >> selection;
+    }
+
+    Debt loan;
+    loan = loan_list[selection - 1];
+
+    loan.printLoan();
+    cout << "\tWhat part do you want to edit: ";
+    int selection1;
+    cin >> selection1;
+    while (selection1 > 4 || selection1 <= 0)
+    {
+        cout << "Invalid number, please re-enter: ";
+        cin >> selection1;
+    }
+    switch (selection1)
+    {
+    case 1:
+        loan.insertAmountOwed();
+        break;
+    
+    case 2:
+        loan.insertUser();
+        break;
+
+    case 3:
+        loan.insertRepaymentDate();
+        break;
+    
+    case 4:
+        loan.insertInterestRate();
+        break;
+
+    default:
+        break;
+    }
+
+    loan_list[selection - 1] = loan;
+}
+
 void DebtManagement::payDebt()
 {
     showListOfDebts();
@@ -237,4 +404,19 @@ void DebtManagement::payDebt()
     }
 
     debt_list[selection - 1].insertDebtPayment();
+}
+
+void DebtManagement::payLoan()
+{
+    showListOfLoans();
+    cout << "\tWhat debt do you want to pay: ";
+    int selection;
+    cin >> selection;
+    while (selection > loan_amount || selection <= 0 || loan_list[selection].getDebtPayment())
+    {
+        cout << "Invalid number, please re-enter: ";
+        cin >> selection;
+    }
+
+    loan_list[selection - 1].insertDebtPayment();
 }

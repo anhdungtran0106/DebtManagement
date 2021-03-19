@@ -13,6 +13,9 @@ private:
     Debt debt_list[100];
     int debt_amount = 0;
 
+    Debt loan_list[100];
+    int loan_amount = 0;
+
 public:
     DebtManagement() {};
 
@@ -25,6 +28,13 @@ public:
     void saveFile();
     void editFile();
     void payDebt();
+    void loanManagement();
+    void addLoan();
+    void showListOfLoans();
+    void deleteLoan();
+    void saveFileLoan();
+    void editFileLoan();
+    void payLoan();
 };
 
 #endif

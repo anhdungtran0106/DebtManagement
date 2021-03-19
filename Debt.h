@@ -22,6 +22,7 @@ class Debt
 
         void insertInfomation();
         void print();
+        void printLoan();
         void insertAmountOwed();
         void insertUser();
         void insertRepaymentDate();

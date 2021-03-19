@@ -26,6 +26,20 @@ void Debt::print()
     
 }
 
+void Debt::printLoan()
+{
+    cout << "\tLoan: " << amount_owed << endl;
+    cout << "\tDebtor: " << creditor.getName() << endl;
+    cout << "\tPhone Number: " << creditor.getPhoneNumber() << endl;
+    cout << "\tRepayment Date: " << repayment_date.toString() << endl;
+    cout << "\tInterest Rate: " << interest_rate << endl;
+    if (debt_payment)
+    {
+        cout << "\tDebt Payment: Paid\n\n";
+    } else { cout << "\tDebt Payment: Unpaid\n\n"; }
+    
+}
+
 void Debt::insertAmountOwed()
 {
     cout << "\tInsert Amount Of Money: ";
