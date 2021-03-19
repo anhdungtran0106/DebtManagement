@@ -56,9 +56,23 @@ void DebtManagement::debtManagement()
         saveFile();
         debtManagement();
         break;
+
+    case 3:
+        showListOfDebts();
+        editFile();
+        saveFile();
+        debtManagement();
+        break;
     
     case 4:
         deleteDebt();
+        saveFile();
+        debtManagement();
+        break;
+
+    case 5:
+        showListOfDebts();
+        payDebt();
         saveFile();
         debtManagement();
         break;
@@ -94,17 +108,17 @@ void DebtManagement::deleteDebt()
 {
     showListOfDebts();
     cout << "\tWhat debt do you want to write off: ";
-    int n;
-    cin >> n;
+    int selection;
+    cin >> selection;
     
-    while (n > debt_amount || n <= 0)
+    while (selection > debt_amount || selection <= 0)
     {
         cout << "Invalid number, please re-enter: ";
-        cin >> n;
+        cin >> selection;
     }
 
-    n--;
-    for (int i = n; i < debt_amount; i++)
+    selection--;
+    for (int i = selection; i < debt_amount; i++)
     {
         debt_list[i] = debt_list[i + 1];
     }
@@ -159,4 +173,68 @@ void DebtManagement::readFile()
 
         f.close();
     }
+}
+
+void DebtManagement::editFile()
+{
+    showListOfDebts();
+    cout << "\tWhat debt do you want to edit: ";
+    int selection;
+    cin >> selection;
+    while (selection > debt_amount || selection <= 0 || debt_list[selection - 1].getDebtPayment())
+    {
+        cout << "Invalid number, please re-enter: ";
+        cin >> selection;
+    }
+
+    Debt debt;
+    debt = debt_list[selection - 1];
+
+    debt.print();
+    cout << "\tWhat part do you want to edit: ";
+    int selection1;
+    cin >> selection1;
+    while (selection1 > 4 || selection1 <= 0)
+    {
+        cout << "Invalid number, please re-enter: ";
+        cin >> selection1;
+    }
+    switch (selection1)
+    {
+    case 1:
+        debt.insertAmountOwed();
+        break;
+    
+    case 2:
+        debt.insertUser();
+        break;
+
+    case 3:
+        debt.insertRepaymentDate();
+        break;
+    
+    case 4:
+        debt.insertInterestRate();
+        break;
+
+    default:
+        break;
+    }
+
+    debt_list[selection - 1] = debt;
+}
+
+void DebtManagement::payDebt()
+{
+    showListOfDebts();
+    cout << "\tWhat debt do you want to pay: ";
+    int selection;
+    cin >> selection;
+    while (selection > debt_amount || selection <= 0 || debt_list[selection].getDebtPayment())
+    {
+        cout << "Invalid number, please re-enter: ";
+        cin >> selection;
+    }
+
+    debt_list[selection - 1].insertDebtPayment();
 }

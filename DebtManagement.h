@@ -23,6 +23,8 @@ public:
     void deleteDebt();
     void readFile();
     void saveFile();
+    void editFile();
+    void payDebt();
 };
 
 #endif
