@@ -14,7 +14,8 @@ void DebtManagement::printMenu()
     cout << "\t3. List Of Creditors And Debtors\n";
     cout << "\t4. Quit\n\n";
     cout << "\t Select Function: ";
-    
+    readFile();
+    readFileLoan();
     int selection;
     cin >> selection;
     switch (selection)
@@ -35,7 +36,7 @@ void DebtManagement::printMenu()
     }
 }
 
-void DebtManagement::loanManagement()
+void DebtManagement::loanManagement()   
 {
     cout << "\t\tSelect Functions\n\n";
     cout << "\t1. Show List Of Loans\n";
@@ -288,6 +289,36 @@ void DebtManagement::readFile()
         User creditor(name, phone_number);
         Date repayment_date(month, day, year);
         debt_list[i].set(amount_owed, creditor, repayment_date,interest_rate);
+
+        f.close();
+    }
+}
+
+void DebtManagement::readFileLoan()
+{
+    fstream f;
+    f.open("loan.txt", ios::in);
+
+    f >> loan_amount;
+    for (int i = 0; i < loan_amount; i++)
+    {
+        long loan;
+        f >> loan;
+        string name;
+        f.ignore();
+        getline(f, name);
+        string phone_number;
+        getline(f, phone_number);
+        int month, day, year;
+        f >> month;
+        f >> day;
+        f >> year;
+        float interest_rate;
+        f >> interest_rate;
+
+        User debtor(name, phone_number);
+        Date repayment_date(month, day, year);
+        loan_list[i].set(loan, debtor, repayment_date,interest_rate);
 
         f.close();
     }

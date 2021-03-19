@@ -35,6 +35,7 @@ public:
     void saveFileLoan();
     void editFileLoan();
     void payLoan();
+    void readFileLoan();
 };
 
 #endif
